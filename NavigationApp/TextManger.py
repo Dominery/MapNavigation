@@ -19,6 +19,6 @@ class TextManger:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if self.back_Button.on_click():
-                    return self.back_Button.world
+                    return self.back_Button.msg
 
 

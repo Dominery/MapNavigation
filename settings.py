@@ -19,7 +19,7 @@ QUIT = "quit"
 # key为跳转信息，value为模块中的应用类名
 # 将应用何时使用注册到主循环中，如果没有JumpInfo注册则应用类不会被执行
 JumpInfo = {
-    "START NAVIGATION": "NavigationApp",
+    "START": "NavigationApp",
     "BACK TO MENU": "StartApp",
     QUIT: "OverApp",
     "Start": "StartApp",
