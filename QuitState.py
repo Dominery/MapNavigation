@@ -1,8 +1,6 @@
 import pygame
 
-
-from MapNavigation_v1_0.Common.Photo import Photo
-from MapNavigation_v1_0.Common.Label import Label
+from MapNavigation_v1_0.Common.element import Label, Photo
 from MapNavigation_v1_0.Common.AbstractClass import InterfaceState
 from MapNavigation_v1_0.settings import Settings, Request
 

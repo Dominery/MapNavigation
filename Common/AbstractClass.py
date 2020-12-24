@@ -3,7 +3,7 @@ from abc import ABCMeta,abstractclassmethod
 
 class AbstractWindowComponents(metaclass=ABCMeta):
     @abstractclassmethod
-    def draw(cls, screen):
+    def draw(cls,*args):
         pass
 
     @abstractclassmethod

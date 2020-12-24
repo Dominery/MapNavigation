@@ -1,6 +1,6 @@
 from MapNavigation_v1_0.Common.InpuBox import TextBox
 from MapNavigation_v1_0.NavigationApp.RollDownLabel import RollDownLabel
-from MapNavigation_v1_0.Common.Label import Label
+from MapNavigation_v1_0.Common.element import Label
 
 
 class SearchBox:

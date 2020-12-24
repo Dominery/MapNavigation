@@ -2,9 +2,7 @@ import pygame
 
 
 from MapNavigation_v1_0.Common.AbstractClass import InterfaceState
-from MapNavigation_v1_0.Common.Photo import Photo
-from MapNavigation_v1_0.Common.Button import Button
-from MapNavigation_v1_0.Common.Label import Label
+from MapNavigation_v1_0.Common.element import Button, Label, Photo
 from MapNavigation_v1_0.settings import Settings, Request
 
 
@@ -46,7 +44,7 @@ class StartState(InterfaceState):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 :
                         for button in self.menu:
-                            if button.on_click():
+                            if button.in_area():
                                 return self.request.send('navigator')
             self.title.draw(screen)
             for i in self.menu:

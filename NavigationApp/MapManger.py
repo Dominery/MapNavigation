@@ -2,17 +2,14 @@ import pygame
 import random
 from pygame.color import THECOLORS
 
-
-from MapNavigation_v1_0.NavigationApp.Location import Point, Route, Spot
-from MapNavigation_v1_0.Common.Photo import Photo
+from MapNavigation_v1_0.NavigationApp.Location import Point, Route
 from MapNavigation_v1_0.NavigationApp.Dijkstra import dijkstra
-from MapNavigation_v1_0.Common.Label import Label
+from MapNavigation_v1_0.Common.element import Label, Photo
 
 
 class MapManger():
     def __init__(self, map_file, window_size):
         self.map = Photo(map_file)
-        self.spot = Spot
         self.points = []
         self.location = [0, 0]
         self.move_x, self.move_y = [0, 0]
@@ -38,25 +35,19 @@ class MapManger():
             point.set_location((location[0] + point.location[0], location[1] + point.location[1]))
         self.map.set_location(tuple(self.location))
 
-    def is_in_point(self, location):
-        for point in self.points:
-            area = self.spot(point)
-            if area.in_rect_x(location[0]) and area.in_rect_y(location[1]):
-                return point
-        return False
-
     @staticmethod
     def show_point_name(point, screen):
-        point_label = Label(point.name,size=20,font="SimHei",color=(0,0,0))
-        point_label.set_location((point.location[0] - point_label.rect.width / 2, point.location[1] + point_label.rect.height))
+        point_label = Label(point.name, size=20, font="SimHei", color=(0, 0, 0))
+        point_label.set_location(
+            (point.location[0] - point_label.rect.width / 2, point.location[1] + point_label.rect.height))
         point_label.draw(screen)
 
     def draw_points(self, screen):
         for i in self.points:
             if i not in self.two_point:
-                pygame.draw.circle(screen, "RED", i.location, 3, 3)
+                i.draw(screen, "RED", 3)
             else:
-                pygame.draw.circle(screen, random.choice(list(THECOLORS.values())), i.location, 4, 4)
+                i.draw(screen, random.choice(list(THECOLORS.values())), 4)
 
     def add_goal_point(self, point):
         if point and len(self.two_point) < 2:
@@ -70,8 +61,9 @@ class MapManger():
             dijkstra(self.two_point)
 
     def on_click_point(self):
-        point = self.is_in_point(pygame.mouse.get_pos())
-        self.add_goal_point(point)
+        for point in self.points:
+            if point.in_area():
+                return point
 
     @staticmethod
     def draw_dijkstra_lines(last_point, screen):
@@ -85,11 +77,9 @@ class MapManger():
     def draw(self, screen):
         self.map.draw(screen)
         self.draw_points(screen)
-        point = self.is_in_point(pygame.mouse.get_pos())
+        point = self.on_click_point()
         if point:
             self.show_point_name(point, screen)
-        for i in self.two_point:
-            self.show_point_name(i, screen)
         if len(self.two_point) == 2:
             self.draw_dijkstra_lines(self.two_point[1], screen)
 
@@ -117,7 +107,8 @@ class MapManger():
                 else:
                     self.move_y -= 10
             elif event.button == 1:
-                self.on_click_point()
+                self.add_goal_point(self.on_click_point())
+
 
     def move_increment_limit(self, width, height):  # 限制地图移动范围，使超过该范围的移动增量设为0
         if self.move_x + self.location[0] > 0:
