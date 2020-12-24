@@ -1,26 +1,30 @@
-import os
+class Settings(object):
+    def __init__(self):
+        self.window_size = (1080, 640)
+        self.caption = "MapNavigation"
+        self.clock = 30
+        self.start_background = "../resources/index.jpg"
+        self.start_title = "北斗导航系统"
+        self.quit_background = "../resources/final.jpg"
+        self.font = {'start': "../resources/李旭科书法.ttf", 'quit': "../resources/李旭科书法.ttf"}
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+class Request(object):
+    _shared_dict = {}
 
-# app所在的模块名即py文件必须要与内部的主应用类同名，目录名可以不同
+    def __new__(cls, *args, **kwargs):
+        instance = super(Request, cls).__new__(cls, *args, **kwargs)
+        instance.__dict__ = cls._shared_dict
+        return instance
 
-# key为所在目录名，value为所在模块名
-# 将应用注册到主循环中
-InstalledFrame = {
-    "StartApp": "StartApp",
-    "NavigationApp": "NavigationApp",
-    "OverApp": "OverApp",
-}
+    def __init__(self):
+        if not self._shared_dict:
+            self._server = []
 
-QUIT = "quit"
+    def add_server(self, server):
+        if server not in self._server:
+            self._server.append(server)
 
-# Start 跳转信息必须添加 QUIT跳转信息可以不添加,但是应用如果要结束整个进程，应用类的show方法必须返回QUIT
-# key为跳转信息，value为模块中的应用类名
-# 将应用何时使用注册到主循环中，如果没有JumpInfo注册则应用类不会被执行
-JumpInfo = {
-    "START": "NavigationApp",
-    "BACK TO MENU": "StartApp",
-    QUIT: "OverApp",
-    "Start": "StartApp",
-}
+    def send(self, request):
+        for server in self._server:
+            server.receive(request)

@@ -3,14 +3,19 @@ import pygame
 
 from MapNavigation_v1_0.Common.Photo import Photo
 from MapNavigation_v1_0.Common.Label import Label
-from MapNavigation_v1_0.Common.AbstractClass import AbstractFrame
+from MapNavigation_v1_0.Common.AbstractClass import InterfaceState
+from MapNavigation_v1_0.settings import Settings, Request
 
 
-class OverApp(AbstractFrame):
-    def __init__(self,window_size):
-        self.image = Photo("../resources/final.jpg")
-        self.label = Label("欢迎使用", size=100, font="../resources/李旭科书法.ttf", color=(255, 255, 255))
-        self.window_size = window_size
+class QuitState(InterfaceState):
+    name = 'quit'
+
+    def __init__(self):
+        self.settings = Settings()
+        self.image = Photo(self.settings.quit_background)
+        self.label = Label("欢迎使用", size=100, font=self.settings.font[self.name], color=(255, 255, 255))
+        self.window_size = self.settings.window_size
+        self.request = Request()
 
     def show(self,screen,clock):
         self.set_location()

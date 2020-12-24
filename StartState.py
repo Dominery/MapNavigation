@@ -1,21 +1,25 @@
 import pygame
 
 
-from MapNavigation_v1_0.Common.AbstractClass import AbstractFrame
+from MapNavigation_v1_0.Common.AbstractClass import InterfaceState
 from MapNavigation_v1_0.Common.Photo import Photo
 from MapNavigation_v1_0.Common.Button import Button
 from MapNavigation_v1_0.Common.Label import Label
-from MapNavigation_v1_0.settings import QUIT
+from MapNavigation_v1_0.settings import Settings, Request
 
 
-class StartApp(AbstractFrame):
-    def __init__(self,size):
-        self.size = size
-        self.background = Photo("../resources/index.jpg")
-        self.title = Label("北斗导航系统",size=70,font="../resources/李旭科书法.ttf",color=(255,255,255))
+class StartState(InterfaceState):
+    name = 'start'
+
+    def __init__(self):
+        self.settings = Settings()
+        self.size = self.settings.window_size
+        self.background = Photo(self.settings.start_background)
+        self.title = Label(self.settings.start_title,size=70,font=self.settings.font['start'],color=(255,255,255))
         self.menu = []
         self.create_menu_choice("START")
         self.init_location()
+        self.request = Request()
 
     def create_menu_choice(self, *world):
         for i in world:
@@ -34,16 +38,16 @@ class StartApp(AbstractFrame):
     def show(self, screen, clock):
         running = True
         while running:
-            clock.tick(30)
+            clock.tick(self.settings.clock)
             self.background.draw(screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return QUIT
+                    return self.request.send('quit')
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1 :
                         for button in self.menu:
                             if button.on_click():
-                                return button.msg
+                                return self.request.send('navigator')
             self.title.draw(screen)
             for i in self.menu:
                 i.draw(screen)

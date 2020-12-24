@@ -10,15 +10,14 @@ from MapNavigation_v1_0.Common.Label import Label
 
 
 class MapManger():
-    def __init__(self, map_file, width, height):
+    def __init__(self, map_file, window_size):
         self.map = Photo(map_file)
         self.spot = Spot
         self.points = []
         self.location = [0, 0]
         self.move_x, self.move_y = [0, 0]
         self.flag = False
-        self.screen_width = width
-        self.screen_height = height
+        self.window_size = window_size
         self.two_point = []
 
     def add_point(self, name, location):
@@ -95,20 +94,12 @@ class MapManger():
             self.draw_dijkstra_lines(self.two_point[1], screen)
 
     def move(self):
-        self.move_increment_limit(self.screen_width, self.screen_height)
+        self.move_increment_limit(*self.window_size)
         self.direct_move((self.move_x, self.move_y))
 
     def event(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                self.move_y += 2
-            elif event.key == pygame.K_DOWN:
-                self.move_y -= 2
-            elif event.key == pygame.K_LEFT:
-                self.move_x += 2
-            elif event.key == pygame.K_RIGHT:
-                self.move_x -= 2
-            elif event.key == pygame.K_LSHIFT:
+            if event.key == pygame.K_LSHIFT:
                 self.flag = True
         elif event.type == pygame.KEYUP:
             self.move_x = 0

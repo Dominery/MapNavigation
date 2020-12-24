@@ -11,10 +11,19 @@ class AbstractWindowComponents(metaclass=ABCMeta):
         pass
 
 
-# Frame 必须继承自AbstractFrame 且必须实现show方法，传入参数必须是window_size
-class AbstractFrame(metaclass=ABCMeta):
+class InterfaceState(metaclass=ABCMeta):
+    name = 'state'
 
     @abstractclassmethod
-    def show(cls,screen,clock):
+    def show(cls,*args):
+        pass
+
+    def __str__(self):
+        return self.name
+
+
+class Server(metaclass=ABCMeta):
+    @abstractclassmethod
+    def receive(cls,request):
         pass
 
